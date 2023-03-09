@@ -24,87 +24,12 @@ namespace Debug
 			System.Diagnostics.Debug.WriteLine (str);
 		}
 
-		static void TagMP3(uint start, uint end, string dir)
-		{
-			uint n = start;
-
-			while (n < end + 1) {
-				var path = Directory.GetFiles (@dir, n + " - *.mp3");
-				if (path.Length == 0) {
-					Log ("Tag Error: " + dir + n + " - *.mp3 cannot be found");
-					break;
-				}
-				foreach (var file in path) {
-					{
-						TagLib.File f = TagLib.File.Create (file);
-						f.Tag.Track = n;
-						f.Save ();
-						n++;
-					}
-				}
-
-			}
-			
-		}
-
-		static void AlterName(uint start, uint end, uint startNew, string dir)
-		{
-			uint n = start;
-			uint diff = startNew - start;
-			
-			while (n < end + 1) {
-				var path = Directory.GetFiles (@dir, n + " - *.mp3");
-				if (path.Length == 0) {
-					Log ("AlterName Error: " + dir + n + " - *.mp3 cannot be found");
-					break;
-				}
-				foreach (var file in path) {
-					{
-						//change file to new file name
-						var newFile = file;
-						string[] splited = newFile.Split (new[] { '-' }, 2);
-						newFile = dir + (n + diff) + " -" + splited[1];
-						System.IO.File.Move (file, newFile);
-						n++;
-					}
-				}
-
-			}
-			
-		}
-
-		static void DupeDetection(uint start, uint end, string dir)
-		{
-			uint n = start;
-			while (n < end + 1) {
-				var path = Directory.GetFiles (@dir, n + " - *.mp3");
-				if (path.Length == 0) {
-					Log ("Dupe Detection: You are missing" + dir + n + " - *.mp3");
-				}
-				if (path.Length > 1) {
-					Log ("Dupe Detection: You have a Dupe at " + n + " with " + path.Length + " occurrences");
-				}
-				n++;
-			}
-		}
-
 		static void Main (string[] args)
 		{
-			//Log ("--------------------");
-			//Log ("* Start : Samples directory: " + Samples);
-			//Log ("");
-			
-			uint aStart = 1;
-			uint aEnd = 5;
-			uint aNewStart = 10;
-			uint start = aNewStart;
-			uint end = aNewStart + aEnd - 1;
-			string dir = "C:\\Users\\georg\\Downloads\\File example\\";
-			AlterName (aStart, aEnd, aNewStart, dir);
-			TagMP3 (start, end, dir);
-			DupeDetection (10, 14, dir);
+			Log ("--------------------");
+			Log ("* Start : Samples directory: " + Samples);
+			Log ("");
 
-			/*
 			// Override command arguments
 			args = new[] { "sample.wav" };
 
@@ -246,7 +171,7 @@ namespace Debug
 				Log ("  Done  : " + tag.Title);
 			}
 
-			Log ("* End");*/
+			Log ("* End");
 		}
 	}
 }
