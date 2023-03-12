@@ -24,6 +24,12 @@ namespace Debug
 			System.Diagnostics.Debug.WriteLine (str);
 		}
 
+		/// <summary>
+		/// Tags the mp3 based on the number before the file ex. Num - file.mp3
+		/// </summary>
+		/// <param name="start"></param>
+		/// <param name="end"></param>
+		/// <param name="dir"></param>
 		static void TagMP3(uint start, uint end, string dir)
 		{
 			uint n = start;
@@ -46,12 +52,106 @@ namespace Debug
 			}
 			
 		}
-
-		static void AlterName(uint start, uint end, uint startNew, string dir)
+		/// <summary>
+		/// Tags all files with one tag number
+		/// </summary>
+		/// <param name="start"></param>
+		/// <param name="end"></param>
+		/// <param name="tagNumber"></param>
+		/// <param name="dir"></param>
+		static void TagZero (uint start, uint end, uint tagNumber, string dir)
 		{
 			uint n = start;
+
+			while (n < end + 1) {
+				var path = Directory.GetFiles (@dir, n + " - *.mp3");
+				if (path.Length == 0) {
+					Log ("Tag Error: " + dir + n + " - *.mp3 cannot be found");
+					break;
+				}
+				foreach (var file in path) {
+					{
+						TagLib.File f = TagLib.File.Create (file);
+						f.Tag.Track = tagNumber;
+						f.Save ();
+						n++;
+					}
+				}
+
+			}
+
+		}
+
+		static void Albuming (uint start, uint end, string AlName, string dir)
+		{
+			uint n = start;
+
+			while (n < end + 1) {
+				var path = Directory.GetFiles (@dir, n + " - *.mp3");
+				if (path.Length == 0) {
+					Log ("Tag Error: " + dir + n + " - *.mp3 cannot be found");
+					break;
+				}
+				foreach (var file in path) {
+					{
+						TagLib.File f = TagLib.File.Create (file);
+						f.Tag.Album = AlName;
+						f.Save ();
+						n++;
+					}
+				}
+
+			}
+
+		}
+
+		/// <summary>
+		/// Very volitile, will alter the name of the mp3 file based on the start index, end index and new start index
+		/// Do not use unless you know exactly what the function does, your files will disapear if you execute it wrong
+		/// </summary>
+		/// <param name="start"></param>
+		/// <param name="end"></param>
+		/// <param name="startNew"></param>
+		/// <param name="dir"></param>
+		static void AlterNameEnd(uint start, uint end, uint startNew, string dir)
+		{
+			uint n = end;
 			uint diff = startNew - start;
 			
+			while (n + 1 > start) {
+				var path = Directory.GetFiles (@dir, n + " - *.mp3");
+				if (path.Length == 0) {
+					Log ("AlterName Error: " + dir + n + " - *.mp3 cannot be found");
+					break;
+				}
+				foreach (var file in path) {
+					{
+						//change file to new file name
+						var newFile = file;
+						string[] splited = newFile.Split (new[] { '-' }, 2);
+						newFile = dir + (n + diff) + " -" + splited[1];
+						System.IO.File.Move (file, newFile);
+						n--;
+					}
+				}
+
+			}
+			
+		}
+
+		/// <summary>
+		/// Very volitile, will alter the name of the mp3 file based on the start index, end index and new start index
+		/// Do not use unless you know exactly what the function does, your files will disapear if you execute it wrong
+		/// </summary>
+		/// <param name="start"></param>
+		/// <param name="end"></param>
+		/// <param name="startNew"></param>
+		/// <param name="dir"></param>
+		static void AlterNameStart (uint start, uint end, uint startNew, string dir)
+		{
+			uint n = start;
+			int diff = (int)startNew - (int)start;
+
 			while (n < end + 1) {
 				var path = Directory.GetFiles (@dir, n + " - *.mp3");
 				if (path.Length == 0) {
@@ -70,9 +170,15 @@ namespace Debug
 				}
 
 			}
-			
+
 		}
 
+		/// <summary>
+		/// Detects for duplicated numbers in the file name where num = the num of (num - file.mp3)
+		/// </summary>
+		/// <param name="start"></param>
+		/// <param name="end"></param>
+		/// <param name="dir"></param>
 		static void DupeDetection(uint start, uint end, string dir)
 		{
 			uint n = start;
@@ -88,22 +194,51 @@ namespace Debug
 			}
 		}
 
+
+		static void FucingStupidMusicApps (uint start, uint end, string dir)
+		{
+			uint n = start;
+			string[] alph = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+			while (n < end + 1) {
+				var path = Directory.GetFiles (@dir, n + " - *.mp3");
+				if (path.Length == 0) {
+					Log ("Tag Error: " + dir + n + " - *.mp3 cannot be found");
+					break;
+				}
+				foreach (var file in path) {
+					{
+						TagLib.File f = TagLib.File.Create (file);
+						int temp = ((int)n)-1;
+						string name = "";
+						while (temp > 25) {
+							temp -= 26;
+							name += alph[25];
+						}
+						name += alph[temp];
+						f.Tag.Album = name;
+						f.Save ();
+						n++;
+					}
+				}
+
+			}
+
+		}
 		static void Main (string[] args)
 		{
 			//Log ("--------------------");
 			//Log ("* Start : Samples directory: " + Samples);
 			//Log ("");
-			
-			uint aStart = 1;
-			uint aEnd = 5;
-			uint aNewStart = 10;
-			uint start = aNewStart;
-			uint end = aNewStart + aEnd - 1;
-			string dir = "C:\\Users\\georg\\Downloads\\File example\\";
-			AlterName (aStart, aEnd, aNewStart, dir);
-			TagMP3 (start, end, dir);
-			DupeDetection (10, 14, dir);
 
+			//uint start = 276;
+			//uint newStart = start + 1;
+			//string dir = "D:\\MediaHuman\\Nightcore Corporation ©\\";
+			//TagZero (0, 1, 0, dir);
+			
+
+			string test = "C:\\Users\\georg_d9nxt11\\Desktop\\Test\\";
+			FucingStupidMusicApps (1, 100, test);
+			
 			/*
 			// Override command arguments
 			args = new[] { "sample.wav" };
