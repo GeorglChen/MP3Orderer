@@ -208,7 +208,7 @@ namespace Debug
 				foreach (var file in path) {
 					{
 						TagLib.File f = TagLib.File.Create (file);
-						int temp = ((int)n)-1;
+						int temp = (int)n;
 						string name = "";
 						while (temp > 25) {
 							temp -= 26;
@@ -224,21 +224,108 @@ namespace Debug
 			}
 
 		}
+
+		static void FucingStupidMusicAppsII (uint start, uint end, string dir)
+		{
+			uint n = start;
+			while (n < end + 1) {
+				var path = Directory.GetFiles (@dir, n + " - *.mp3");
+				if (path.Length == 0) {
+					Log ("Tag Error: " + dir + n + " - *.mp3 cannot be found");
+					break;
+				}
+				foreach (var file in path) {
+					{
+						TagLib.File f = TagLib.File.Create (file);
+						f.Tag.Album = "a";
+						f.Save ();
+						n++;
+					}
+				}
+
+			}
+
+		}
+
+		static void IFucingHateTheseDumbFucingMusicApps (uint start, uint end, string dir)
+		{
+			uint n = start;
+			string[] alph = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+			while (n < end + 1) {
+				var path = Directory.GetFiles (@dir, n + " - *.mp3");
+				if (path.Length == 0) {
+					Log ("Tag Error: " + dir + n + " - *.mp3 cannot be found");
+					break;
+				}
+				foreach (var file in path) {
+					{
+						TagLib.File f = TagLib.File.Create (file);
+						int temp = ((int)n) - 1;
+						string name = "";
+						while (temp > 25) {
+							temp -= 26;
+							name += alph[25];
+						}
+						name += alph[temp];
+						string[] nameL = { name };
+						f.Tag.Artists = nameL;
+						f.Save ();
+						n++;
+					}
+				}
+
+			}
+
+		}
+
+		static void BruhIWasTrynnaAlterTheWrongThingThisWholeTime (uint start, uint end, string dir)
+		{
+			uint n = start;
+			string[] alph = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+
+			while (n < end + 1) {
+				var path = Directory.GetFiles (@dir, n + " - *.mp3");
+				if (path.Length == 0) {
+					Log ("AlterName Error: " + dir + n + " - *.mp3 cannot be found");
+					break;
+				}
+				foreach (var file in path) {
+					{
+						//change file to new file name
+						var newFile = file;
+						string[] splited = newFile.Split (new[] { '-' }, 2);
+						int temp = ((int)n) - 1;
+						string name = "";
+						while (temp > 25) {
+							temp -= 26;
+							name += alph[25];
+						}
+						name += alph[temp];
+						newFile = dir + (n) + " - " + name + " -" + splited[1];
+						System.IO.File.Move (file, newFile);
+						n++;
+					}
+				}
+
+			}
+
+		}
 		static void Main (string[] args)
 		{
 			//Log ("--------------------");
 			//Log ("* Start : Samples directory: " + Samples);
 			//Log ("");
 
-			//uint start = 276;
-			//uint newStart = start + 1;
-			//string dir = "D:\\MediaHuman\\Nightcore Corporation ©\\";
-			//TagZero (0, 1, 0, dir);
-			
+			uint start = 276;
+			uint newStart = start + 1;
+			string dir = "D:\\MediaHuman\\Nightcore Corporation ©\\";
+			FucingStupidMusicAppsII (0, 0, dir);
+			//FucingStupidMusicApps (1, 1140, dir);
 
-			string test = "C:\\Users\\georg_d9nxt11\\Desktop\\Test\\";
-			FucingStupidMusicApps (1, 100, test);
-			
+
+			//string test = "C:\\Users\\georg_d9nxt11\\Desktop\\Test\\";
+			//FucingStupidMusicApps (1, 100, test);
+
 			/*
 			// Override command arguments
 			args = new[] { "sample.wav" };
